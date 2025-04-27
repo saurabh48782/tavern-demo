@@ -1,0 +1,49 @@
+name: ecommerce-local
+services:
+  api:
+    build:
+      context: ./
+      target: test_api
+    profiles:
+      - all
+      - integration_test
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:8000/healthcheck || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 8
+
+  db:
+    image: postgres:14
+    profiles:
+      - all
+      - dev
+      - integration_test
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "ecommerce"]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  integration-test:
+    build:
+      context: ./
+      target: integration_test
+    profiles:
+      - integration_test
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy

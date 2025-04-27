@@ -1,0 +1,7 @@
+api:
+  url: http://localhost:8000
+  timeout: 5
+
+db:
+  url: postgresql://test_user:test_password@localhost/ecommerce
+  use_pool_outside_fastapi: true
