@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from db import db_conn
-from src.data.customers import (Customer, CustomerWithId, get_customer_info,
-                                put_customer)
+from src.data.customers import (Customer, CustomerWithId, delete_customer_info,
+                                get_customer_info, put_customer)
 
 router = APIRouter(prefix="/customer", tags=["Customers"])
 
@@ -21,7 +21,7 @@ async def add_customer(identifier: int, customer: Customer = Depends()):
 @router.get("/{identifier}",
             summary="List of routes an agent can access",
             response_model=CustomerWithId)
-async def get_customers(identifier: int) -> Customer:
+async def get_customers(identifier: int) -> CustomerWithId:
     async with db_conn() as con:
         customer_data = await get_customer_info(con, identifier)
         if not customer_data:
@@ -29,3 +29,9 @@ async def get_customers(identifier: int) -> Customer:
         return CustomerWithId(id=customer_data['id'],
                               name=customer_data['name'],
                               email=customer_data['email'])
+
+
+@router.delete("/{identifier}", summary="Remove a customer")
+async def delete_customer(identifier: int):
+    async with db_conn() as con:
+        await delete_customer_info(con, identifier)

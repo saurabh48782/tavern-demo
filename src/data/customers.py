@@ -29,3 +29,11 @@ async def get_customer_info(con: Connection, customer_id: int):
     if not res:
         return None
     return dict(res)
+
+
+async def delete_customer_info(con: Connection, customer_id: int):
+    customer = Table("customers")
+    q = Query.from_(customer)
+    q = q.where(customer.id == customer_id)
+    q = q.delete()
+    await con.execute(str(q))

@@ -23,7 +23,7 @@ stages:
     response:
       status_code: 201
 
-  - name: Ensure customer is registered
+  - name: Ensure customer is added
     request:
       url: "{tavern.env_vars.API_URL}/customer/1"
       method: GET
@@ -33,3 +33,17 @@ stages:
         id : 1
         name : saurabh
         email : saurabh@example.com
+
+  - name: Delete existing customer
+    request:
+      url: "{tavern.env_vars.API_URL}/customer/1"
+      method: DELETE
+    response:
+      status_code: 200
+
+  - name: Get a non-existent customer
+    request:
+      url: "{tavern.env_vars.API_URL}/customer/1"
+      method: GET
+    response:
+      status_code: 404
