@@ -11,7 +11,11 @@ export ENVIRONMENT_VARIABLES=$(cat <<EOF
 EOF
 )
 
-poetry run alembic upgrade head
-poetry run uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
+# poetry run alembic upgrade head
+# poetry run uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
+
+# For Windows compatibility
+cmd.exe /C "poetry run alembic upgrade head"
+cmd.exe /C "poetry run uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000"
 
 docker compose --profile dev down

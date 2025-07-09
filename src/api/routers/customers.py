@@ -9,7 +9,6 @@ router = APIRouter(prefix="/customer", tags=["Customers"])
 
 @router.put("/{identifier}", summary="Register a customer.", status_code=201)
 async def add_customer(identifier: int, customer: Customer = Depends()):
-    print(f"identifier: {identifier},\ncustomer: {customer}")
     try:
         async with db_conn() as con:
             await put_customer(con, identifier, customer.name, customer.email)
@@ -19,7 +18,7 @@ async def add_customer(identifier: int, customer: Customer = Depends()):
 
 
 @router.get("/{identifier}",
-            summary="List of routes an agent can access",
+            summary="Customer information by identifier.",
             response_model=CustomerWithId)
 async def get_customers(identifier: int) -> CustomerWithId:
     async with db_conn() as con:
@@ -31,7 +30,7 @@ async def get_customers(identifier: int) -> CustomerWithId:
                               email=customer_data['email'])
 
 
-@router.delete("/{identifier}", summary="Remove a customer")
+@router.delete("/{identifier}", summary="Remove a customer.", status_code=200)
 async def delete_customer(identifier: int):
     async with db_conn() as con:
         await delete_customer_info(con, identifier)
