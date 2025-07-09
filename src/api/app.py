@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from src.api.routers import customers, items
+from src.api.routers import customers, items, orders
 
 
 @asynccontextmanager
@@ -26,3 +26,4 @@ async def home():
 
 app.include_router(customers.router)
 app.include_router(items.router)
+app.include_router(orders.router)
