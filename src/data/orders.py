@@ -13,5 +13,6 @@ class OrderWithId(Order):
     id: int
     created_at: datetime
 
+
 async def create_order(con, order: Order):
     pass
